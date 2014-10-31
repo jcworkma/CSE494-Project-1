@@ -13,4 +13,6 @@
 @property NSString *ticker;
 @property NSNumber *numShares;
 
+- (id)init:(NSString*)ticker withNumShares:(NSNumber *)numShares;
+
 @end

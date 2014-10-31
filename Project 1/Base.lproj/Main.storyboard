@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
@@ -67,10 +67,10 @@
             </objects>
             <point key="canvasLocation" x="932" y="-286"/>
         </scene>
-        <!--View Controller-->
+        <!--Add Stock View Controller-->
         <scene sceneID="VAW-Bc-QmM">
             <objects>
-                <viewController id="Omn-WN-z9r" sceneMemberID="viewController">
+                <viewController id="Omn-WN-z9r" customClass="AddStockViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="LQT-LG-ahW"/>
                         <viewControllerLayoutGuide type="bottom" id="gy3-Ta-ip0"/>
@@ -90,11 +90,14 @@
                                     <segment title="Watching"/>
                                     <segment title="Holding"/>
                                 </segments>
+                                <connections>
+                                    <action selector="categorySwitch:" destination="Omn-WN-z9r" eventType="valueChanged" id="1DD-3K-6N7"/>
+                                </connections>
                             </segmentedControl>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="C4p-AF-WcF">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" disabledBackground="first" translatesAutoresizingMaskIntoConstraints="NO" id="C4p-AF-WcF">
                                 <rect key="frame" x="188" y="269" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Number of shares:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xri-92-TSl">
                                 <rect key="frame" x="38" y="272" width="142" height="21"/>
@@ -107,6 +110,9 @@
                                 <state key="normal" title="Add Stock">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="addButton:" destination="Omn-WN-z9r" eventType="touchUpInside" id="lZM-IJ-Qcd"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enter stock ticker:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r2F-fI-i4e">
                                 <rect key="frame" x="41" y="113" width="139" height="21"/>
@@ -118,6 +124,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="a80-jf-4tv"/>
+                    <connections>
+                        <outlet property="categorySegmentedControl" destination="c7y-TU-f2M" id="LV9-oJ-cNE"/>
+                        <outlet property="sharesTextField" destination="C4p-AF-WcF" id="0iw-Jc-0Vw"/>
+                        <outlet property="tickerTextField" destination="X2F-qb-njR" id="om5-qy-9f4"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ps4-WS-jAE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

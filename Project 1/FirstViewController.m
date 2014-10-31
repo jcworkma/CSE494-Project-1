@@ -7,6 +7,7 @@
 //
 
 #import "FirstViewController.h"
+#import "Portfolio.h"
 
 @interface FirstViewController () <UITableViewDataSource, UITableViewDelegate>
 

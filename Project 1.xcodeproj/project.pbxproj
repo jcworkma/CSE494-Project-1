@@ -17,6 +17,7 @@
 		664CAD051A0198E200D6B4FF /* Project_1Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CAD041A0198E200D6B4FF /* Project_1Tests.m */; };
 		664CAD101A01A61200D6B4FF /* Portfolio.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CAD0F1A01A61200D6B4FF /* Portfolio.m */; };
 		664CAD131A01A68000D6B4FF /* Stock.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CAD121A01A68000D6B4FF /* Stock.m */; };
+		9D7BF61A1A0346F10037E6D9 /* AddStockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D7BF6191A0346F10037E6D9 /* AddStockViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,8 @@
 		664CAD0F1A01A61200D6B4FF /* Portfolio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Portfolio.m; sourceTree = "<group>"; };
 		664CAD111A01A68000D6B4FF /* Stock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stock.h; sourceTree = "<group>"; };
 		664CAD121A01A68000D6B4FF /* Stock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stock.m; sourceTree = "<group>"; };
+		9D7BF6181A0346F10037E6D9 /* AddStockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddStockViewController.h; path = ../AddStockViewController.h; sourceTree = "<group>"; };
+		9D7BF6191A0346F10037E6D9 /* AddStockViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddStockViewController.m; path = ../AddStockViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +93,8 @@
 		664CACE41A0198E100D6B4FF /* Project 1 */ = {
 			isa = PBXGroup;
 			children = (
+				9D7BF6181A0346F10037E6D9 /* AddStockViewController.h */,
+				9D7BF6191A0346F10037E6D9 /* AddStockViewController.m */,
 				664CACE91A0198E100D6B4FF /* AppDelegate.h */,
 				664CACEA1A0198E100D6B4FF /* AppDelegate.m */,
 				664CACEC1A0198E100D6B4FF /* FirstViewController.h */,
@@ -236,6 +241,7 @@
 			files = (
 				664CAD131A01A68000D6B4FF /* Stock.m in Sources */,
 				664CACF11A0198E100D6B4FF /* SecondViewController.m in Sources */,
+				9D7BF61A1A0346F10037E6D9 /* AddStockViewController.m in Sources */,
 				664CACEB1A0198E100D6B4FF /* AppDelegate.m in Sources */,
 				664CACEE1A0198E100D6B4FF /* FirstViewController.m in Sources */,
 				664CAD101A01A61200D6B4FF /* Portfolio.m in Sources */,
@@ -430,6 +436,7 @@
 				664CAD0A1A0198E200D6B4FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		664CAD0B1A0198E200D6B4FF /* Build configuration list for PBXNativeTarget "Project 1Tests" */ = {
 			isa = XCConfigurationList;
@@ -438,6 +445,7 @@
 				664CAD0D1A0198E200D6B4FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

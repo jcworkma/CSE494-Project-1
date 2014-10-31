@@ -10,6 +10,8 @@
 
 @implementation Portfolio
 
+static Portfolio *thePortfolio = nil;
+
 - (id)init
 {
     self = [super init];
@@ -21,29 +23,56 @@
     return SUCCESS;
 }
 
-- (int)addHolding:(Stock *)stock
++ (Portfolio *)sharedInstance
+{
+    if (thePortfolio == nil)
+    {
+        thePortfolio = [[Portfolio alloc] init];
+    }
+    
+    return thePortfolio;
+}
+
+- (void)addHolding:(Stock *)stock withCallback:(void (^)(int))callback
 {
     for (Stock *s in self.holdings)
     {
         if ([s.ticker isEqualToString:stock.ticker]) {
-            return ALREADYHOLDING;
+            callback(ALREADY_HOLDING);
+            return;
         }
     }
-    [self.holdings addObject:stock];
-    return true;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *ticker = stock.ticker;
+        NSString *queryString = [NSString stringWithFormat:@"%@%@", STOCK_LOOKUP_BASE_URL, ticker];
+        NSURL *queryURL = [NSURL URLWithString:queryString];
+        NSData *data = [NSData dataWithContentsOfURL:queryURL];
+        NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:Nil];
+        
+        if (resultDict.count > 0)
+        {
+            callback(SYMBOL_NOT_FOUND);
+        }
+        else
+        {
+            [self.watching addObject:stock];
+            callback(SUCCESS);
+        }
+    });
 }
 
-- (int)addWatching:(Stock *)stock
+- (void)addWatching:(Stock *)stock withCallback:(void (^)(int))callback
 {
     for (Stock *s in self.watching)
     {
         if ([s.ticker isEqualToString:stock.ticker])
         {
-            return ALREADYWATCHING;
+            callback(ALREADY_WATCHING);
+            return;
         }
     }
     [self.watching addObject:stock];
-    return SUCCESS;
+    callback(SUCCESS);
 }
 
 - (int)queryForStock:(NSString *)ticker
