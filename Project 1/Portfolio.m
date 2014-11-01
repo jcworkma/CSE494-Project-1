@@ -20,7 +20,7 @@ static Portfolio *thePortfolio = nil;
         self.holdings = [[NSMutableArray alloc] init];
         self.watching = [[NSMutableArray alloc] init];
     }
-    return SUCCESS;
+    return self;
 }
 
 + (Portfolio *)sharedInstance
@@ -42,6 +42,7 @@ static Portfolio *thePortfolio = nil;
             return;
         }
     }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *ticker = stock.ticker;
         NSString *queryString = [NSString stringWithFormat:@"%@%@", STOCK_LOOKUP_BASE_URL, ticker];
@@ -49,14 +50,18 @@ static Portfolio *thePortfolio = nil;
         NSData *data = [NSData dataWithContentsOfURL:queryURL];
         NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:Nil];
         
-        if (resultDict.count > 0)
+        if (resultDict.count == 0)
         {
-            callback(SYMBOL_NOT_FOUND);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                callback(SYMBOL_NOT_FOUND);
+            });
         }
         else
         {
-            [self.watching addObject:stock];
-            callback(SUCCESS);
+            [self.holdings addObject:stock];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                callback(SUCCESS);
+            });
         }
     });
 }
