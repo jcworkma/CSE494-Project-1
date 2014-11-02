@@ -76,13 +76,28 @@ static Portfolio *thePortfolio = nil;
             return;
         }
     }
-    [self.watching addObject:stock];
-    callback(SUCCESS);
-}
-
-- (int)queryForStock:(NSString *)ticker
-{
-    return SUCCESS;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *ticker = stock.ticker;
+        NSString *queryString = [NSString stringWithFormat:@"%@%@", STOCK_LOOKUP_BASE_URL, ticker];
+        NSURL *queryURL = [NSURL URLWithString:queryString];
+        NSData *data = [NSData dataWithContentsOfURL:queryURL];
+        NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:Nil];
+        
+        if (resultDict.count == 0)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                callback(SYMBOL_NOT_FOUND);
+            });
+        }
+        else
+        {
+            [self.watching addObject:stock];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                callback(SUCCESS);
+            });
+        }
+    });
 }
 
 @end

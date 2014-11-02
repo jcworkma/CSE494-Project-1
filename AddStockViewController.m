@@ -65,6 +65,7 @@
     if ([ticker length] == 0)
     {
         [self displayAlert:@"No ticker symbol" withMessage:@"Please enter a ticker symbol"];
+        return;
     }
     
     Portfolio *portfolio = [Portfolio sharedInstance];
@@ -89,6 +90,7 @@
         }
     };
     
+    // TODO: add an activity indicator?
     if ([self.categorySegmentedControl selectedSegmentIndex] == 0)
     {
         Stock *stock = [[Stock alloc] init:ticker withNumShares:0];
@@ -101,6 +103,7 @@
             [numShares compare:[NSNumber numberWithInt:0]] == NSOrderedAscending)
         {
             [self displayAlert:@"Invalid number of shares" withMessage:@"Enter a positive integer for the number of shares"];
+            return;
         }
         
         Stock * stock = [[Stock alloc] init:ticker withNumShares:numShares];

@@ -17,6 +17,7 @@
 		664CAD051A0198E200D6B4FF /* Project_1Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CAD041A0198E200D6B4FF /* Project_1Tests.m */; };
 		664CAD101A01A61200D6B4FF /* Portfolio.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CAD0F1A01A61200D6B4FF /* Portfolio.m */; };
 		664CAD131A01A68000D6B4FF /* Stock.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CAD121A01A68000D6B4FF /* Stock.m */; };
+		9D55F7A41A05810900B630CC /* StatusTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D55F7A31A05810900B630CC /* StatusTableViewCell.m */; };
 		9D7BF61A1A0346F10037E6D9 /* AddStockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D7BF6191A0346F10037E6D9 /* AddStockViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,8 @@
 		664CAD0F1A01A61200D6B4FF /* Portfolio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Portfolio.m; sourceTree = "<group>"; };
 		664CAD111A01A68000D6B4FF /* Stock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stock.h; sourceTree = "<group>"; };
 		664CAD121A01A68000D6B4FF /* Stock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stock.m; sourceTree = "<group>"; };
+		9D55F7A21A05810900B630CC /* StatusTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusTableViewCell.h; sourceTree = "<group>"; };
+		9D55F7A31A05810900B630CC /* StatusTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusTableViewCell.m; sourceTree = "<group>"; };
 		9D7BF6181A0346F10037E6D9 /* AddStockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddStockViewController.h; path = ../AddStockViewController.h; sourceTree = "<group>"; };
 		9D7BF6191A0346F10037E6D9 /* AddStockViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddStockViewController.m; path = ../AddStockViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,6 +104,8 @@
 				664CACED1A0198E100D6B4FF /* FirstViewController.m */,
 				664CACEF1A0198E100D6B4FF /* SecondViewController.h */,
 				664CACF01A0198E100D6B4FF /* SecondViewController.m */,
+				9D55F7A21A05810900B630CC /* StatusTableViewCell.h */,
+				9D55F7A31A05810900B630CC /* StatusTableViewCell.m */,
 				664CACF21A0198E100D6B4FF /* Main.storyboard */,
 				664CAD111A01A68000D6B4FF /* Stock.h */,
 				664CAD121A01A68000D6B4FF /* Stock.m */,
@@ -246,6 +251,7 @@
 				664CACEE1A0198E100D6B4FF /* FirstViewController.m in Sources */,
 				664CAD101A01A61200D6B4FF /* Portfolio.m in Sources */,
 				664CACE81A0198E100D6B4FF /* main.m in Sources */,
+				9D55F7A41A05810900B630CC /* StatusTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
