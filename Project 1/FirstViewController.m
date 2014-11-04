@@ -16,6 +16,7 @@
 #define STOCK_DATA_QUERY_URL_P2 @")&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys"
 #define GREEN_ARROW_FILENAME @"greenarrow.png"
 #define RED_ARROW_FILENAME @"redarrow.png"
+#define FLAT_LINE_FILENAME @"flatline.jpg"
 
 @interface FirstViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -76,16 +77,14 @@
             // Need to special-case this because the API returns a JSON object if there's only one result and a JSON array if there's more than one result.
             if (portfolio.holdings.count == 1) {
                 if ([results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]]) {
-                    double change = [results[@"Change"] doubleValue];
-                    results[@"Image"] = change >= 0 ? GREEN_ARROW_FILENAME : RED_ARROW_FILENAME;
+                    [self getStatusImage:results];
                     [holdingsData addObject:results];
                 }
             } else {
                 for (Stock * s in portfolio.holdings) {
                     for (NSMutableDictionary * dict in results) {
                         if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
-                            double change = [dict[@"Change"] doubleValue];
-                            dict[@"Image"] = change >= 0 ? GREEN_ARROW_FILENAME : RED_ARROW_FILENAME;
+                            [self getStatusImage:dict];
                             [holdingsData addObject:dict];
                             break;
                         }
@@ -95,16 +94,14 @@
             
             if (portfolio.watching.count == 1) {
                 if ([results[@"Symbol"] isEqualToString:[portfolio.watching[0] ticker]]) {
-                    double change = [results[@"Change"] doubleValue];
-                    results[@"Image"] = change >= 0 ? GREEN_ARROW_FILENAME : RED_ARROW_FILENAME;
+                    [self getStatusImage:results];
                     [watchingData addObject:results];
                 }
             } else {
                 for (Stock * s in portfolio.watching) {
                     for (NSMutableDictionary * dict in results) {
                         if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
-                            double change = [dict[@"Change"] doubleValue];
-                            dict[@"Image"] = change >= 0 ? GREEN_ARROW_FILENAME : RED_ARROW_FILENAME;
+                            [self getStatusImage:dict];
                             [watchingData addObject:dict];
                             break;
                         }
@@ -123,6 +120,18 @@
         });
     } else {
         [self.refreshControl endRefreshing];
+    }
+}
+                                
+- (void)getStatusImage:(NSMutableDictionary *)dict
+{
+    double change = [dict[@"Change"] doubleValue];
+    if (change > 0) {
+        dict[@"Image"] = GREEN_ARROW_FILENAME;
+    } else if (change < 0) {
+        dict[@"Image"] = RED_ARROW_FILENAME;
+    } else {
+        dict[@"Image"] = FLAT_LINE_FILENAME;
     }
 }
 
