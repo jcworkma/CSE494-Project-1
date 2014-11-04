@@ -17,6 +17,7 @@
 #define GREEN_ARROW_FILENAME @"greenarrow.png"
 #define RED_ARROW_FILENAME @"redarrow.png"
 #define FLAT_LINE_FILENAME @"flatline.jpg"
+#define STATUS_STRING @"%@ (%.2f%%)"
 
 @interface FirstViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -78,6 +79,7 @@
             if (portfolio.holdings.count == 1 && portfolio.watching.count == 0) {
                 if ([results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]]) {
                     [self getStatusImage:results];
+                    [self getPercentage:results];
                     [holdingsData addObject:results];
                 }
             } else {
@@ -85,6 +87,7 @@
                     for (NSMutableDictionary * dict in results) {
                         if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
                             [self getStatusImage:dict];
+                            [self getPercentage:dict];
                             [holdingsData addObject:dict];
                             break;
                         }
@@ -95,6 +98,7 @@
             if (portfolio.watching.count == 1 && portfolio.holdings.count == 0) {
                 if ([results[@"Symbol"] isEqualToString:[portfolio.watching[0] ticker]]) {
                     [self getStatusImage:results];
+                    [self getPercentage:results];
                     [watchingData addObject:results];
                 }
             } else {
@@ -102,6 +106,7 @@
                     for (NSMutableDictionary * dict in results) {
                         if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
                             [self getStatusImage:dict];
+                            [self getPercentage:dict];
                             [watchingData addObject:dict];
                             break;
                         }
@@ -109,13 +114,7 @@
                 }
             }
             
-            
-            
-            NSLog(@"%lu", (unsigned long)holdingsData.count);
-            NSLog(@"%lu", (unsigned long)watchingData.count);
-            
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"reloadData");
                 [self.tableView reloadData];
                 [self.refreshControl endRefreshing];
             });
@@ -124,7 +123,17 @@
         [self.refreshControl endRefreshing];
     }
 }
-                                
+
+- (void)getPercentage:(NSMutableDictionary *)dict
+{
+    NSDecimalNumber * change = [NSDecimalNumber decimalNumberWithString:dict[@"Change"]];
+    NSDecimalNumber * lastPrice = [NSDecimalNumber decimalNumberWithString:dict[@"LastTradePriceOnly"]];
+    NSDecimalNumber * previousPrice = [lastPrice decimalNumberBySubtracting:change];
+    NSDecimalNumber * percentChange = [change decimalNumberByDividingBy:previousPrice];
+    percentChange = [percentChange decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:@"100"]];
+    dict[@"Percent"] = percentChange;
+}
+
 - (void)getStatusImage:(NSMutableDictionary *)dict
 {
     double change = [dict[@"Change"] doubleValue];
@@ -191,15 +200,21 @@
     
     switch (section) {
         case 0:
+        {
             [cell.tickerLabel setText:[portfolio.watching[row] ticker]];
-            [cell.statusLabel setText:watchingData[row][@"Change"]];
+            NSString * status = [NSString stringWithFormat:STATUS_STRING, watchingData[row][@"Change"], [watchingData[row][@"Percent"] doubleValue]];
+            [cell.statusLabel setText:status];
             cell.image.image = [UIImage imageNamed:watchingData[row][@"Image"]];
             break;
+        }
         case 1:
+        {   // Surrounding each case's code with braces so we don't redefine "status".
             [cell.tickerLabel setText:[portfolio.holdings[row] ticker]];
-            [cell.statusLabel setText:holdingsData[row][@"Change"]];
+            NSString * status = [NSString stringWithFormat:STATUS_STRING, holdingsData[row][@"Change"], [holdingsData[row][@"Percent"] doubleValue]];
+            [cell.statusLabel setText:status];
             cell.image.image = [UIImage imageNamed:holdingsData[row][@"Image"]];
             break;
+        }
     }
     
     return cell;
