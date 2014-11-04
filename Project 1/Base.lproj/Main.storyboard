@@ -209,7 +209,6 @@
         <!--Stock Status-->
         <scene sceneID="37H-iM-Tqh">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="RpC-pL-M4G" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Pci-ru-XPz" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Stock Status" image="first" id="acW-dT-cKf"/>
                     <toolbarItems/>
@@ -222,6 +221,7 @@
                         <segue destination="ck9-RI-YCh" kind="relationship" relationship="rootViewController" id="qFB-Ku-0fy"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RpC-pL-M4G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="400" y="-286"/>
         </scene>

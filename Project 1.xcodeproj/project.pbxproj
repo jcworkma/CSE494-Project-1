@@ -19,6 +19,8 @@
 		664CAD131A01A68000D6B4FF /* Stock.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CAD121A01A68000D6B4FF /* Stock.m */; };
 		9D55F7A41A05810900B630CC /* StatusTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D55F7A31A05810900B630CC /* StatusTableViewCell.m */; };
 		9D7BF61A1A0346F10037E6D9 /* AddStockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D7BF6191A0346F10037E6D9 /* AddStockViewController.m */; };
+		9D8D95541A09598C00B289A1 /* redarrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D8D95521A09598C00B289A1 /* redarrow.png */; };
+		9D8D95551A09598C00B289A1 /* greenarrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D8D95531A09598C00B289A1 /* greenarrow.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		9D55F7A31A05810900B630CC /* StatusTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusTableViewCell.m; sourceTree = "<group>"; };
 		9D7BF6181A0346F10037E6D9 /* AddStockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddStockViewController.h; path = ../AddStockViewController.h; sourceTree = "<group>"; };
 		9D7BF6191A0346F10037E6D9 /* AddStockViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddStockViewController.m; path = ../AddStockViewController.m; sourceTree = "<group>"; };
+		9D8D95521A09598C00B289A1 /* redarrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redarrow.png; sourceTree = "<group>"; };
+		9D8D95531A09598C00B289A1 /* greenarrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenarrow.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,8 @@
 		664CACE51A0198E100D6B4FF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9D8D95521A09598C00B289A1 /* redarrow.png */,
+				9D8D95531A09598C00B289A1 /* greenarrow.png */,
 				664CACE61A0198E100D6B4FF /* Info.plist */,
 				664CACE71A0198E100D6B4FF /* main.m */,
 			);
@@ -225,7 +231,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				664CACF41A0198E100D6B4FF /* Main.storyboard in Resources */,
+				9D8D95541A09598C00B289A1 /* redarrow.png in Resources */,
 				664CACF91A0198E100D6B4FF /* LaunchScreen.xib in Resources */,
+				9D8D95551A09598C00B289A1 /* greenarrow.png in Resources */,
 				664CACF61A0198E100D6B4FF /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
