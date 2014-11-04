@@ -190,10 +190,6 @@
     NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
     
-    NSLog(@"cellforrowatindexpath:row:%ld", (long)row);
-    NSLog(@"cellforrowatindexpath:%lu", (unsigned long)holdingsData.count);
-    NSLog(@"cellforrowatindexpath:%lu", (unsigned long)watchingData.count);
-    
     switch (section) {
         case 0:
             [cell.tickerLabel setText:[portfolio.watching[row] ticker]];
