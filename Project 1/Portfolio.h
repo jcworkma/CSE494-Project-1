@@ -17,6 +17,7 @@
 #define STOCK_LOOKUP_BASE_URL @"http://dev.markitondemand.com/Api/v2/Lookup/json?input="
 
 @interface Portfolio : NSObject
+    <NSCoding>
 
 @property NSMutableArray *holdings;
 @property NSMutableArray *watching;
@@ -24,5 +25,7 @@
 - (void)addHolding:(Stock *)stock withCallback:(void(^)(int result))callback;
 - (void)addWatching:(Stock *)stock withCallback:(void(^)(int result))callback;
 + (Portfolio *)sharedInstance;
+- (id)initWithCoder:(NSCoder *)aDecoder;
+- (void)encodeWithCoder:(NSCoder *)aCoder;
 
 @end

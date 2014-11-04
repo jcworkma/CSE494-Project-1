@@ -21,4 +21,18 @@
     return self;
 }
 
+#pragma mark NSCoding protocol
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    NSString * ticker = [aDecoder decodeObjectForKey:@"tkey"];
+    NSNumber * numShares = [aDecoder decodeObjectForKey:@"skey"];
+    return [self init:ticker withNumShares:numShares];
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.ticker forKey:@"tkey"];
+    [aCoder encodeObject:self.numShares forKey:@"skey"];
+}
+
 @end

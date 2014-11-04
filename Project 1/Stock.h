@@ -9,10 +9,13 @@
 #import <Foundation/Foundation.h>
 
 @interface Stock : NSObject
+    <NSCoding>
 
 @property NSString *ticker;
 @property NSNumber *numShares;
 
 - (id)init:(NSString*)ticker withNumShares:(NSNumber *)numShares;
+- (id)initWithCoder:(NSCoder *)aDecoder;
+- (void)encodeWithCoder:(NSCoder *)aCoder;
 
 @end
