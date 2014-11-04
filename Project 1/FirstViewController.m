@@ -174,13 +174,10 @@
     switch (section) {
         case 0:
             return @"Watching";
-            break;
         case 1:
             return @"Holding";
-            break;
         default:
             return @"Error";
-            break;
     }
 }
 
