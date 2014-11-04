@@ -60,7 +60,7 @@
 }
 
 - (IBAction)addButton:(id)sender {
-    NSString *ticker = self.tickerTextField.text;
+    NSString *ticker = [self.tickerTextField.text uppercaseString];
     
     if ([ticker length] == 0)
     {

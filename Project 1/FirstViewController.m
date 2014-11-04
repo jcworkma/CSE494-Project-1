@@ -75,7 +75,7 @@
             NSLog(@"%lu", (unsigned long)results.count);
             
             // Need to special-case this because the API returns a JSON object if there's only one result and a JSON array if there's more than one result.
-            if (portfolio.holdings.count == 1) {
+            if (portfolio.holdings.count == 1 && portfolio.watching.count == 0) {
                 if ([results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]]) {
                     [self getStatusImage:results];
                     [holdingsData addObject:results];
@@ -92,7 +92,7 @@
                 }
             }
             
-            if (portfolio.watching.count == 1) {
+            if (portfolio.watching.count == 1 && portfolio.holdings.count == 0) {
                 if ([results[@"Symbol"] isEqualToString:[portfolio.watching[0] ticker]]) {
                     [self getStatusImage:results];
                     [watchingData addObject:results];
@@ -108,6 +108,8 @@
                     }
                 }
             }
+            
+            
             
             NSLog(@"%lu", (unsigned long)holdingsData.count);
             NSLog(@"%lu", (unsigned long)watchingData.count);
