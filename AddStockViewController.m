@@ -19,12 +19,19 @@
 
 @end
 
-@implementation AddStockViewController
+@implementation AddStockViewController {
+    UIActivityIndicatorView *spinner;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.sharesTextField setUserInteractionEnabled:NO];
+    
+    spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    spinner.center = self.view.center;
+    spinner.hidesWhenStopped = YES;
+    [self.view addSubview:spinner];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -60,6 +67,7 @@
 }
 
 - (IBAction)addButton:(id)sender {
+    
     NSString *ticker = [self.tickerTextField.text uppercaseString];
     
     if ([ticker length] == 0)
@@ -71,6 +79,7 @@
     Portfolio *portfolio = [Portfolio sharedInstance];
     
     void(^addStockCallback)(int) = ^(int result) {
+        [spinner stopAnimating];
         switch(result) {
             case ALREADY_HOLDING:
                 [self displayAlert:@"Already holding" withMessage:@"You are already holding this stock. You can add more shares on the stock editing page."];
@@ -90,10 +99,10 @@
         }
     };
     
-    // TODO: add an activity indicator?
     if ([self.categorySegmentedControl selectedSegmentIndex] == 0)
     {
         Stock *stock = [[Stock alloc] init:ticker withNumShares:0];
+        [spinner startAnimating];
         [portfolio addWatching:stock withCallback:addStockCallback];
     }
     else
@@ -107,6 +116,7 @@
         }
         
         Stock * stock = [[Stock alloc] init:ticker withNumShares:numShares];
+        [spinner startAnimating];
         [portfolio addHolding:stock withCallback:addStockCallback];
     }
     

@@ -56,8 +56,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     [spinner startAnimating];
-    
     [self refreshData];
 }
 
@@ -136,6 +136,7 @@
         });
     } else {
         [self.refreshControl endRefreshing];
+        [spinner stopAnimating];
     }
 }
 
@@ -208,6 +209,13 @@
                 break;
         }
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        if (portfolio.holdings.count == 0 && portfolio.watching.count == 0)
+        {
+            [self.tableView setEditing:NO animated:YES];
+            self.removeButton.title = @"Remove";
+        }
+        [portfolio savePortfolio];
     }
 }
 

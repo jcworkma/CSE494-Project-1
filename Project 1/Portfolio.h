@@ -27,5 +27,6 @@
 + (Portfolio *)sharedInstance;
 - (id)initWithCoder:(NSCoder *)aDecoder;
 - (void)encodeWithCoder:(NSCoder *)aCoder;
+- (void)savePortfolio;
 
 @end
