@@ -26,6 +26,7 @@
 {
     Portfolio * portfolio;
     NSMutableArray * holdingsData;
+    NSDecimalNumber * totalPortfolioValue;
 }
 
 - (void)viewDidLoad
@@ -53,19 +54,16 @@
 
 - (void)refreshData
 {
-    if (portfolio.holdings.count > 0 || portfolio.watching.count > 0) {
+    if (portfolio.holdings.count > 0) {
+        totalPortfolioValue = [NSDecimalNumber zero];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [holdingsData removeAllObjects];
             
-            NSMutableSet * stockSet = [[NSMutableSet alloc] init];
-            [stockSet addObjectsFromArray:portfolio.holdings];
-            [stockSet addObjectsFromArray:portfolio.watching];
-            
             NSMutableString * stocksToQuery = [[NSMutableString alloc] initWithString:STOCK_DATA_QUERY_URL_P1];
-            NSArray * stocksArray = [stockSet allObjects];
-            [stocksToQuery appendString:[NSString stringWithFormat:@"%@%@%@", QUOTATION_ENCODING, [stocksArray[0] ticker], QUOTATION_ENCODING]];
-            for (int i = 1; i < stocksArray.count; ++i) {
-                [stocksToQuery appendString:[NSString stringWithFormat:@"%@%@%@%@", COMMA_ENCODING, QUOTATION_ENCODING, [stocksArray[i] ticker], QUOTATION_ENCODING]];
+
+            [stocksToQuery appendString:[NSString stringWithFormat:@"%@%@%@", QUOTATION_ENCODING, [portfolio.holdings[0] ticker], QUOTATION_ENCODING]];
+            for (int i = 1; i < portfolio.holdings.count; ++i) {
+                [stocksToQuery appendString:[NSString stringWithFormat:@"%@%@%@%@", COMMA_ENCODING, QUOTATION_ENCODING, [portfolio.holdings[i] ticker], QUOTATION_ENCODING]];
             }
             [stocksToQuery appendString:STOCK_DATA_QUERY_URL_P2];
             
@@ -73,30 +71,30 @@
             NSData * data = [NSData dataWithContentsOfURL:queryURL];
             
             NSMutableDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"query"][@"results"][@"quote"];
-            NSLog(@"%lu", (unsigned long)results.count);
             
             // Need to special-case this because the API returns a JSON object if there's only one result and a JSON array if there's more than one result.
             if (portfolio.holdings.count == 1) {
                 if ([results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]]) {
-                    [self getStatusImage:results];
+                    [self getTotalValue:results numShares:[portfolio.holdings[0] numShares]];
                     [holdingsData addObject:results];
+                    totalPortfolioValue = [totalPortfolioValue decimalNumberByAdding:results[@"HoldingsValue"]];
                 }
             } else {
+                int stockNum = 0;
                 for (Stock * s in portfolio.holdings) {
                     for (NSMutableDictionary * dict in results) {
                         if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
-                            [self getStatusImage:dict];
+                            [self getTotalValue:dict numShares:[portfolio.holdings[stockNum] numShares]];
+                            ++stockNum;
                             [holdingsData addObject:dict];
+                            totalPortfolioValue = [totalPortfolioValue decimalNumberByAdding:dict[@"HoldingsValue"]];
                             break;
                         }
                     }
                 }
             }
             
-            NSLog(@"%lu", (unsigned long)holdingsData.count);
-            
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"reloadData");
                 [self.tableView reloadData];
                 [self.refreshControl endRefreshing];
             });
@@ -106,27 +104,58 @@
     }
 }
 
-- (void)getStatusImage:(NSMutableDictionary *)dict
+- (void)getTotalValue:(NSMutableDictionary *)dict numShares:(NSNumber *)numShares
 {
-    double change = [dict[@"Change"] doubleValue];
-    if (change > 0) {
-        dict[@"Image"] = GREEN_ARROW_FILENAME;
-    } else if (change < 0) {
-        dict[@"Image"] = RED_ARROW_FILENAME;
-    } else {
-        dict[@"Image"] = FLAT_LINE_FILENAME;
-    }
+    NSDecimalNumber * sharePrice = [NSDecimalNumber decimalNumberWithString:dict[@"LastTradePriceOnly"]];
+    NSDecimalNumber * totalValue = [sharePrice decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[numShares stringValue]]];
+    dict[@"HoldingsValue"] = totalValue;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    if (holdingsData.count > 0) {
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.tableView.backgroundView = nil;
+        return 2;
+    } else {
+        // Display a message when the table is empty
+        UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+        
+        messageLabel.text = @"No data is currently available. Please pull down to refresh.";
+        messageLabel.textColor = [UIColor blackColor];
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = NSTextAlignmentCenter;
+        messageLabel.font = [UIFont fontWithName:@"Palatino-Italic" size:20];
+        [messageLabel sizeToFit];
+        
+        self.tableView.backgroundView = messageLabel;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // return number of stocks
-    return holdingsData.count;
+    switch (section) {
+        case 0:
+            return holdingsData.count;
+        case 1:
+            return holdingsData.count > 0 ? 1 : 0;
+        default:
+            return 0;
+    }
+}
+
+- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    switch (section) {
+        case 0:
+            return @"Portfolio Contents";
+        case 1:
+            return @"Total";
+        default:
+            return @"Error";
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -135,9 +164,20 @@
     NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
     
-    [cell.tickerLabel setText:[portfolio.holdings[row] ticker]];
-//    [cell.statusLabel setText:holdingsData[row][@"Change"]];
-//    cell.image.image = [UIImage imageNamed:holdingsData[row][@"Image"]];
+    switch (section) {
+        case 0:
+            [cell.tickerLabel setText:holdingsData[row][@"Symbol"]];
+
+            [cell.valueLabel setText:[NSString stringWithFormat:@"%.2f", [holdingsData[row][@"HoldingsValue"] doubleValue]]];
+    
+            [cell.calculationLabel setText:[NSString stringWithFormat:@"%@ shares @ %@ per share", [portfolio.holdings[row] numShares], holdingsData[row][@"LastTradePriceOnly"]]];
+            break;
+        case 1:
+            [cell.tickerLabel setText:@"Total"];
+            [cell.valueLabel setText:[totalPortfolioValue stringValue]];
+            [cell.calculationLabel setText:@""];
+            break;
+    }
     
     return cell;
 }
