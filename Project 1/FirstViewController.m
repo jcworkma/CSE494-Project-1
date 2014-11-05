@@ -20,6 +20,8 @@
 #define STATUS_STRING @"%@ (%.2f%%)"
 
 @interface FirstViewController () <UITableViewDataSource, UITableViewDelegate>
+- (IBAction)removePressed:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *removeButton;
 
 @end
 
@@ -192,6 +194,26 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        switch (indexPath.section)
+        {
+            case 0:
+                [portfolio.watching removeObjectAtIndex:indexPath.row];
+                [watchingData removeObjectAtIndex:indexPath.row];
+                break;
+            case 1:
+                [portfolio.holdings removeObjectAtIndex:indexPath.row];
+                [holdingsData removeObjectAtIndex:indexPath.row];
+                break;
+        }
+        
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     StatusTableViewCell *cell = (StatusTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"StatusCell"];
@@ -220,4 +242,16 @@
     return cell;
 }
 
+- (void)removePressed:(id)sender
+{
+    if (holdingsData.count > 0 || watchingData.count > 0) {
+        if (self.tableView.editing) {
+            [self.tableView setEditing:NO animated:YES];
+            self.removeButton.title = @"Remove";
+        } else {
+            [self.tableView setEditing:YES  animated:NO];
+            self.removeButton.title = @"Done";
+        }
+    }
+}
 @end

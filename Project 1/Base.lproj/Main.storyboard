@@ -48,12 +48,20 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="tn6-Jl-Vwc">
+                        <barButtonItem key="leftBarButtonItem" title="Remove" id="rQY-x5-dBK">
+                            <connections>
+                                <action selector="removePressed:" destination="ck9-RI-YCh" id="KC3-PK-wIi"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Add" id="ozE-Xp-ncH">
                             <connections>
                                 <segue destination="Omn-WN-z9r" kind="push" id="9Ku-0v-hxv"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="removeButton" destination="rQY-x5-dBK" id="1wx-0E-u1O"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="veu-Dj-pMd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
