@@ -25,9 +25,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    // "Watching" is selected by default, so the "Shares" text field should not be editable.
     [self.sharesTextField setUserInteractionEnabled:NO];
     
+    // Initialize the activity indicator spinner.
     spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     spinner.center = self.view.center;
     spinner.hidesWhenStopped = YES;
@@ -39,6 +40,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+// Convenience method to display an alert, given a title and message.
 - (void)displayAlert:(NSString *)title withMessage:(NSString *)message {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
@@ -55,19 +57,21 @@
 */
 
 - (IBAction)categorySwitch:(id)sender {
+    // If the switch was set to "Watching", disable inteaction on the "Shares" text field.
     if ([self.categorySegmentedControl selectedSegmentIndex] == 0)
     {
         [self.sharesTextField setUserInteractionEnabled:NO];
     }
+    // Otherwise, the switch was set to "Holding", so enable interaction on the "Shares" text field.
     else
     {
         [self.sharesTextField setUserInteractionEnabled:YES];
     }
+    // If the keyboard is up, hide it.
     [self hideKeyboard];
 }
 
 - (IBAction)addButton:(id)sender {
-    
     NSString *ticker = [self.tickerTextField.text uppercaseString];
     
     if ([ticker length] == 0)
@@ -76,8 +80,10 @@
         return;
     }
     
+    // Get the singleton instance of the Portfolio.
     Portfolio *portfolio = [Portfolio sharedInstance];
     
+    // Block that is called after the Portfolio has finished its addHolding/addWatching call.
     void(^addStockCallback)(int) = ^(int result) {
         [spinner stopAnimating];
         switch(result) {
@@ -91,7 +97,6 @@
                 [self displayAlert:@"Ticker symbol not found" withMessage:@"We couldn't find that ticker symbol. Please make sure you typed it in correctly."];
                 break;
             case SUCCESS:
-                // TODO: separate messages for watching success/holding success?
                 [self displayAlert:@"Success!" withMessage:@"Your stock was successfully added."];
                 break;
             default:
@@ -99,25 +104,29 @@
         }
     };
     
-    if ([self.categorySegmentedControl selectedSegmentIndex] == 0)
+    if ([self.categorySegmentedControl selectedSegmentIndex] == 0) // The switch is set to "Watching"
     {
         Stock *stock = [[Stock alloc] init:ticker withNumShares:0];
+        // Start the activity indicator spinner.
         [spinner startAnimating];
+        // Attempt to add the stock to the "Watching" category.
         [portfolio addWatching:stock withCallback:addStockCallback];
     }
-    else
+    else // The switch is set to "Holding"
     {
         NSNumber * numShares = [NSNumber numberWithInt:[self.sharesTextField.text intValue]];
         if ([numShares compare:[NSNumber numberWithInt:0]] == NSOrderedSame ||
             [numShares compare:[NSNumber numberWithInt:0]] == NSOrderedAscending)
         {
+            // If the number of shares is <= 0, display an alert.
             [self displayAlert:@"Invalid number of shares" withMessage:@"Enter a positive integer for the number of shares"];
             return;
         }
         
         Stock * stock = [[Stock alloc] init:ticker withNumShares:numShares];
+        // Start the activity indicator spinner.
         [spinner startAnimating];
-        
+        // Attempt to add the stock to the "Holding" category.
         [portfolio addHolding:stock withCallback:addStockCallback];
     }
     
