@@ -87,13 +87,11 @@
             NSURL * queryURL = [NSURL URLWithString:stocksToQuery];
             NSData * data = [NSData dataWithContentsOfURL:queryURL];
             
-            NSMutableDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"query"][@"results"][@"quote"];
-            NSArray * resultsArray = [results allValues];
-            NSLog(@"%lu", (unsigned long)results.count);
+            id results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"query"][@"results"][@"quote"];
             
             // Need to special-case this because the API returns a JSON object if there's only one result and a JSON array if there's more than one result.
             
-            if (![resultsArray[0] isKindOfClass:[NSDictionary class]])
+            if ([results isKindOfClass:[NSDictionary class]])
             {
                 if (portfolio.holdings.count > 0 && [results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]])
                 {
@@ -115,7 +113,7 @@
                 }
             }
             
-            if (![resultsArray[0] isKindOfClass:[NSDictionary class]])
+            if ([results isKindOfClass:[NSDictionary class]])
             {
                 if (portfolio.watching.count > 0 && [results[@"Symbol"] isEqualToString:[portfolio.watching[0] ticker]])
                 {
