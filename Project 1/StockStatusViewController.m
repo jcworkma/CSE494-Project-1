@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 CSE494. All rights reserved.
 //
 
-#import "FirstViewController.h"
+#import "StockStatusViewController.h"
 #import "Portfolio.h"
 #import "StatusTableViewCell.h"
 
@@ -19,13 +19,13 @@
 #define FLAT_LINE_FILENAME @"flatline.jpg"
 #define STATUS_STRING @"%@ (%.2f%%)"
 
-@interface FirstViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface StockStatusViewController () <UITableViewDataSource, UITableViewDelegate>
 - (IBAction)removePressed:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *removeButton;
 
 @end
 
-@implementation FirstViewController {
+@implementation StockStatusViewController {
     Portfolio * portfolio;
     NSMutableArray * holdingsData;
     NSMutableArray * watchingData;
@@ -34,7 +34,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    // The Portfolio singleton will be initialized here, because this is the intitial view.
     portfolio = [Portfolio sharedInstance];
     holdingsData = [[NSMutableArray alloc] init];
     watchingData = [[NSMutableArray alloc] init];

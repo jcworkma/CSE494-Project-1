@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		664CACE81A0198E100D6B4FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CACE71A0198E100D6B4FF /* main.m */; };
 		664CACEB1A0198E100D6B4FF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CACEA1A0198E100D6B4FF /* AppDelegate.m */; };
-		664CACEE1A0198E100D6B4FF /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CACED1A0198E100D6B4FF /* FirstViewController.m */; };
-		664CACF11A0198E100D6B4FF /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CACF01A0198E100D6B4FF /* SecondViewController.m */; };
+		664CACEE1A0198E100D6B4FF /* StockStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CACED1A0198E100D6B4FF /* StockStatusViewController.m */; };
+		664CACF11A0198E100D6B4FF /* PortfolioSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CACF01A0198E100D6B4FF /* PortfolioSummaryViewController.m */; };
 		664CACF41A0198E100D6B4FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 664CACF21A0198E100D6B4FF /* Main.storyboard */; };
 		664CACF61A0198E100D6B4FF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 664CACF51A0198E100D6B4FF /* Images.xcassets */; };
 		664CACF91A0198E100D6B4FF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 664CACF71A0198E100D6B4FF /* LaunchScreen.xib */; };
@@ -41,10 +41,10 @@
 		664CACE71A0198E100D6B4FF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		664CACE91A0198E100D6B4FF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		664CACEA1A0198E100D6B4FF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		664CACEC1A0198E100D6B4FF /* FirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
-		664CACED1A0198E100D6B4FF /* FirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
-		664CACEF1A0198E100D6B4FF /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
-		664CACF01A0198E100D6B4FF /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		664CACEC1A0198E100D6B4FF /* StockStatusViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StockStatusViewController.h; sourceTree = "<group>"; };
+		664CACED1A0198E100D6B4FF /* StockStatusViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StockStatusViewController.m; sourceTree = "<group>"; };
+		664CACEF1A0198E100D6B4FF /* PortfolioSummaryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PortfolioSummaryViewController.h; sourceTree = "<group>"; };
+		664CACF01A0198E100D6B4FF /* PortfolioSummaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PortfolioSummaryViewController.m; sourceTree = "<group>"; };
 		664CACF31A0198E100D6B4FF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		664CACF51A0198E100D6B4FF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		664CACF81A0198E100D6B4FF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -109,10 +109,10 @@
 				9D7BF6191A0346F10037E6D9 /* AddStockViewController.m */,
 				664CACE91A0198E100D6B4FF /* AppDelegate.h */,
 				664CACEA1A0198E100D6B4FF /* AppDelegate.m */,
-				664CACEC1A0198E100D6B4FF /* FirstViewController.h */,
-				664CACED1A0198E100D6B4FF /* FirstViewController.m */,
-				664CACEF1A0198E100D6B4FF /* SecondViewController.h */,
-				664CACF01A0198E100D6B4FF /* SecondViewController.m */,
+				664CACEC1A0198E100D6B4FF /* StockStatusViewController.h */,
+				664CACED1A0198E100D6B4FF /* StockStatusViewController.m */,
+				664CACEF1A0198E100D6B4FF /* PortfolioSummaryViewController.h */,
+				664CACF01A0198E100D6B4FF /* PortfolioSummaryViewController.m */,
 				9D55F7A21A05810900B630CC /* StatusTableViewCell.h */,
 				9D55F7A31A05810900B630CC /* StatusTableViewCell.m */,
 				669144F11A099C930006A4FA /* PortfolioTableViewCell.h */,
@@ -262,10 +262,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				664CAD131A01A68000D6B4FF /* Stock.m in Sources */,
-				664CACF11A0198E100D6B4FF /* SecondViewController.m in Sources */,
+				664CACF11A0198E100D6B4FF /* PortfolioSummaryViewController.m in Sources */,
 				9D7BF61A1A0346F10037E6D9 /* AddStockViewController.m in Sources */,
 				664CACEB1A0198E100D6B4FF /* AppDelegate.m in Sources */,
-				664CACEE1A0198E100D6B4FF /* FirstViewController.m in Sources */,
+				664CACEE1A0198E100D6B4FF /* StockStatusViewController.m in Sources */,
 				669144F31A099C930006A4FA /* PortfolioTableViewCell.m in Sources */,
 				664CAD101A01A61200D6B4FF /* Portfolio.m in Sources */,
 				664CACE81A0198E100D6B4FF /* main.m in Sources */,

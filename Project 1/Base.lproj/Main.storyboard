@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
-        <!--First View Controller-->
+        <!--Stock Status View Controller-->
         <scene sceneID="Zs1-IZ-DLC">
             <objects>
-                <tableViewController id="ck9-RI-YCh" customClass="FirstViewController" sceneMemberID="viewController">
+                <tableViewController id="ck9-RI-YCh" customClass="StockStatusViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="GwR-kW-iVO">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -142,10 +142,10 @@
             </objects>
             <point key="canvasLocation" x="1376" y="-286"/>
         </scene>
-        <!--Second View Controller-->
+        <!--Portfolio Summary View Controller-->
         <scene sceneID="u7z-7q-IXw">
             <objects>
-                <tableViewController id="NR7-Tg-98d" customClass="SecondViewController" sceneMemberID="viewController">
+                <tableViewController id="NR7-Tg-98d" customClass="PortfolioSummaryViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="1H2-qw-UaI">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

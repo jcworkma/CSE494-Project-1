@@ -1,5 +1,5 @@
 //
-//  FirstViewController.h
+//  SecondViewController.h
 //  Project 1
 //
 //  Created by bhroos on 10/29/14.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FirstViewController : UITableViewController
+@interface PortfolioSummaryViewController : UITableViewController
 
 
 @end

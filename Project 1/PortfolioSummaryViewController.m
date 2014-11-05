@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 CSE494. All rights reserved.
 //
 
-#import "SecondViewController.h"
+#import "PortfolioSummaryViewController.h"
 #import "Portfolio.h"
 #import "PortfolioTableViewCell.h"
 
@@ -18,11 +18,11 @@
 #define RED_ARROW_FILENAME @"redarrow.png"
 #define FLAT_LINE_FILENAME @"flatline.jpg"
 
-@interface SecondViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface PortfolioSummaryViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @end
 
-@implementation SecondViewController
+@implementation PortfolioSummaryViewController
 {
     Portfolio * portfolio;
     NSMutableArray * holdingsData;
