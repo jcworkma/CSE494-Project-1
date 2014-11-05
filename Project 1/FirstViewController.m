@@ -88,17 +88,22 @@
             NSData * data = [NSData dataWithContentsOfURL:queryURL];
             
             NSMutableDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"query"][@"results"][@"quote"];
+            NSArray * resultsArray = [results allValues];
             NSLog(@"%lu", (unsigned long)results.count);
             
             // Need to special-case this because the API returns a JSON object if there's only one result and a JSON array if there's more than one result.
-            if (portfolio.holdings.count == 1 && portfolio.watching.count == 0) {
-                if ([results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]]) {
+            
+            if (![resultsArray[0] isKindOfClass:[NSDictionary class]])
+            {
+                if (portfolio.holdings.count > 0 && [results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]])
+                {
                     [self getStatusImage:results];
                     [self getPercentage:results];
                     [holdingsData addObject:results];
                 }
             } else {
-                for (Stock * s in portfolio.holdings) {
+                for (Stock * s in portfolio.holdings)
+                {
                     for (NSMutableDictionary * dict in results) {
                         if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
                             [self getStatusImage:dict];
@@ -110,8 +115,10 @@
                 }
             }
             
-            if (portfolio.watching.count == 1 && portfolio.holdings.count == 0) {
-                if ([results[@"Symbol"] isEqualToString:[portfolio.watching[0] ticker]]) {
+            if (![resultsArray[0] isKindOfClass:[NSDictionary class]])
+            {
+                if (portfolio.watching.count > 0 && [results[@"Symbol"] isEqualToString:[portfolio.watching[0] ticker]])
+                {
                     [self getStatusImage:results];
                     [self getPercentage:results];
                     [watchingData addObject:results];
@@ -119,7 +126,8 @@
             } else {
                 for (Stock * s in portfolio.watching) {
                     for (NSMutableDictionary * dict in results) {
-                        if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
+                        if ([dict[@"Symbol"] isEqualToString:[s ticker]])
+                        {
                             [self getStatusImage:dict];
                             [self getPercentage:dict];
                             [watchingData addObject:dict];
@@ -164,9 +172,25 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    self.tableView.backgroundView = nil;
-    
+    if (watchingData.count > 0 || holdingsData.count > 0)
+    {
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.tableView.backgroundView = nil;
+    }
+    else {
+        // Display a message when the table is empty
+        UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+        
+        messageLabel.text = @"You haven't added any stocks.";
+        messageLabel.textColor = [UIColor blackColor];
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = NSTextAlignmentCenter;
+        messageLabel.font = [UIFont fontWithName:@"Palatino-Italic" size:20];
+        [messageLabel sizeToFit];
+        
+        self.tableView.backgroundView = messageLabel;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
     return 2;
 }
 

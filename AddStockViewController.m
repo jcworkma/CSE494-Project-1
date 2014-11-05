@@ -117,6 +117,7 @@
         
         Stock * stock = [[Stock alloc] init:ticker withNumShares:numShares];
         [spinner startAnimating];
+        
         [portfolio addHolding:stock withCallback:addStockCallback];
     }
     
