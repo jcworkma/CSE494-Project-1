@@ -29,6 +29,7 @@
     Portfolio * portfolio;
     NSMutableArray * holdingsData;
     NSMutableArray * watchingData;
+    UIActivityIndicatorView *spinner;
 }
 
 - (void)viewDidLoad {
@@ -45,7 +46,19 @@
     [self.refreshControl addTarget:self
                             action:@selector(refreshData)
                   forControlEvents:UIControlEventValueChanged];
+    
+    spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    spinner.center = self.view.center;
+    spinner.hidesWhenStopped = YES;
+    [self.view addSubview:spinner];
 
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [spinner startAnimating];
+    
+    [self refreshData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -115,10 +128,10 @@
                     }
                 }
             }
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
                 [self.refreshControl endRefreshing];
+                [spinner stopAnimating];
             });
         });
     } else {
@@ -150,25 +163,10 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (holdingsData.count > 0 || watchingData.count > 0) {
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        self.tableView.backgroundView = nil;
-        return 2;
-    } else {
-        // Display a message when the table is empty
-        UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.backgroundView = nil;
     
-        messageLabel.text = @"No data is currently available. Please pull down to refresh.";
-        messageLabel.textColor = [UIColor blackColor];
-        messageLabel.numberOfLines = 0;
-        messageLabel.textAlignment = NSTextAlignmentCenter;
-        messageLabel.font = [UIFont fontWithName:@"Palatino-Italic" size:20];
-        [messageLabel sizeToFit];
-    
-        self.tableView.backgroundView = messageLabel;
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    }
-    return 0;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -209,7 +207,6 @@
                 [holdingsData removeObjectAtIndex:indexPath.row];
                 break;
         }
-        
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
