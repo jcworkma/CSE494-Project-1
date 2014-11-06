@@ -170,7 +170,7 @@
         // Display a message when the table is empty.
         UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
         
-        messageLabel.text = @"You haven't added any stock holdings. Go to Stock Status page to add holdings.";
+        messageLabel.text = @"You haven't added any stock holdings. Go to the Stock Status page to add holdings.";
         messageLabel.textColor = [UIColor blackColor];
         messageLabel.numberOfLines = 0;
         messageLabel.textAlignment = NSTextAlignmentCenter;
