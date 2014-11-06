@@ -53,6 +53,7 @@ static Portfolio *thePortfolio = nil;
 {
     if (thePortfolio == nil)
     {
+        // This is the first time the instance has been requested, so load the data from storage.
         thePortfolio = [[Portfolio alloc] init];
         [Portfolio loadPortfolio];
     }
@@ -82,7 +83,7 @@ static Portfolio *thePortfolio = nil;
 {
     for (Stock *s in self.holdings)
     {
-        if ([s.ticker isEqualToString:stock.ticker]) {
+        if ([s.ticker isEqualToString:stock.ticker]) { // If the user already holds this stock:
             callback(ALREADY_HOLDING);
             return;
         }
@@ -94,27 +95,32 @@ static Portfolio *thePortfolio = nil;
         NSURL *queryURL = [NSURL URLWithString:queryString];
         NSData *data = [NSData dataWithContentsOfURL:queryURL];
         
-        if (data != nil)
+        if (data != nil) // Check that we actually received some data.
         {
             NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:Nil];
             
-            if (resultDict.count == 0)
+            // This API returns an empty JSON array if the stock doesn't exist, so all we have to do to check that this is a valid stock is see if the array has any contents.
+            if (resultDict.count == 0) // The array doesn't have any data, so it's not a real stock.
             {
+                // We're not on the main thread and the callback does UI updates, so call the callback on the main thread.
                 dispatch_async(dispatch_get_main_queue(), ^{
                     callback(SYMBOL_NOT_FOUND);
                 });
             }
-            else
+            else    // The array contains data, so the stock exists.
             {
+                // Add to the user's holdings and save them.
                 [self.holdings addObject:stock];
                 [self savePortfolio];
+                // We're not on the main thread and the callback does UI updates, so call the callback on the main thread.
                 dispatch_async(dispatch_get_main_queue(), ^{
                     callback(SUCCESS);
                 });
             }
         }
-        else
+        else // The data received was nil.
         {
+            // We're not on the main thread and the callback does UI updates, so call the callback on the main thread.
             dispatch_async(dispatch_get_main_queue(), ^{
                 callback(NO_DATA);
             });
@@ -126,7 +132,7 @@ static Portfolio *thePortfolio = nil;
 {
     for (Stock *s in self.watching)
     {
-        if ([s.ticker isEqualToString:stock.ticker])
+        if ([s.ticker isEqualToString:stock.ticker]) // If the user is already watching this stock:
         {
             callback(ALREADY_WATCHING);
             return;
@@ -139,20 +145,24 @@ static Portfolio *thePortfolio = nil;
         NSURL *queryURL = [NSURL URLWithString:queryString];
         NSData *data = [NSData dataWithContentsOfURL:queryURL];
         
-        if (data != nil)
+        if (data != nil) // Check that we actually received some data.
         {
             NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:Nil];
             
-            if (resultDict.count == 0)
+            // This API returns an empty JSON array if the stock doesn't exist, so all we have to do to check that this is a valid stock is see if the array has any contents.
+            if (resultDict.count == 0) // The array doesn't have any data, so it's not a real stock.
             {
+                // We're not on the main thread and the callback does UI updates, so call the callback on the main thread.
                 dispatch_async(dispatch_get_main_queue(), ^{
                     callback(SYMBOL_NOT_FOUND);
                 });
             }
-            else
+            else // The array contains data, so the stock exists.
             {
+                // Add to the user's watched stocks and save them.
                 [self.watching addObject:stock];
                 [self savePortfolio];
+                // We're not on the main thread and the callback does UI updates, so call the callback on the main thread.
                 dispatch_async(dispatch_get_main_queue(), ^{
                     callback(SUCCESS);
                 });
@@ -160,6 +170,7 @@ static Portfolio *thePortfolio = nil;
         }
         else
         {
+            // We're not on the main thread and the callback does UI updates, so call the callback on the main thread.
             dispatch_async(dispatch_get_main_queue(), ^{
                 callback(NO_DATA);
             });

@@ -18,6 +18,9 @@
 #define RED_ARROW_FILENAME @"redarrow.png"
 #define FLAT_LINE_FILENAME @"flatline.jpg"
 
+#define PORTFOLIO_SECTION 0
+#define TOTAL_SECTION 1
+
 @interface PortfolioSummaryViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @end
@@ -33,12 +36,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    
+
+    // Get the Portfolio singleton instance.
     portfolio = [Portfolio sharedInstance];
     holdingsData = [[NSMutableArray alloc] init];
     self.title = @"Portfolio Summary";
     
+    // Set up the pull-to-refresh control.
     self.refreshControl = [[UIRefreshControl alloc] init];
     self.refreshControl.backgroundColor = [UIColor colorWithRed:0.0 green:0.7843 blue:1.0 alpha:1.0];
     self.refreshControl.tintColor = [UIColor whiteColor];
@@ -46,6 +50,7 @@
                             action:@selector(refreshData)
                   forControlEvents:UIControlEventValueChanged];
     
+    // Set up the activity indicator spinner.
     spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     spinner.center = self.view.center;
     spinner.hidesWhenStopped = YES;
@@ -55,6 +60,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    // The data will refresh every time the view reappears.
     [spinner startAnimating];
     [self refreshData];
 }
@@ -67,14 +73,17 @@
 
 - (void)refreshData
 {
-    if (portfolio.holdings.count > 0) {
+    if (portfolio.holdings.count > 0) { // Only refresh the data if the user has any stocks.
+        // Reset the portfolio's total value to zero.
         totalPortfolioValue = [NSDecimalNumber zero];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            // Clear any old stock data.
             [holdingsData removeAllObjects];
             
             NSMutableString * stocksToQuery = [[NSMutableString alloc] initWithString:STOCK_DATA_QUERY_URL_P1];
-
+            // Add the first stock ticker to the URL, which needs to be done separately from the other stock tickers because they all have to be comma-separated in the URL.
             [stocksToQuery appendString:[NSString stringWithFormat:@"%@%@%@", QUOTATION_ENCODING, [portfolio.holdings[0] ticker], QUOTATION_ENCODING]];
+            // Add the rest of the stock tickers to the URL.
             for (int i = 1; i < portfolio.holdings.count; ++i) {
                 [stocksToQuery appendString:[NSString stringWithFormat:@"%@%@%@%@", COMMA_ENCODING, QUOTATION_ENCODING, [portfolio.holdings[i] ticker], QUOTATION_ENCODING]];
             }
@@ -83,25 +92,30 @@
             NSURL * queryURL = [NSURL URLWithString:stocksToQuery];
             NSData * data = [NSData dataWithContentsOfURL:queryURL];
             
-            if (data != nil)
+            if (data != nil) // Check to make sure we actually received data.
             {
+                // The actual content we want is nested inside the returned JSON object.
                 NSMutableDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"query"][@"results"][@"quote"];
                 
-                // Need to special-case this because the API returns a JSON object if there's only one result and a JSON array if there's more than one result.
+                // This API returns a JSON object (not a JSON array) if there is only one result in the result set. It returns a JSON array of JSON objects if there is more than one result. Therefore, we have to check what data structure type the result is so we can properly extract the data we want.
                 if (portfolio.holdings.count == 1) {
                     if ([results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]]) {
+                        // Calculate and set the total value of this stock holding.
                         [self getTotalValue:results numShares:[portfolio.holdings[0] numShares]];
                         [holdingsData addObject:results];
+                        // Add its value to the total portfolio value.
                         totalPortfolioValue = [totalPortfolioValue decimalNumberByAdding:results[@"HoldingsValue"]];
                     }
                 } else {
                     int stockNum = 0;
-                    for (Stock * s in portfolio.holdings) {
-                        for (NSMutableDictionary * dict in results) {
-                            if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
+                    for (Stock * s in portfolio.holdings) { // For each stock in the user's holdings:
+                        for (NSMutableDictionary * dict in results) { // For each stock object returned by the Web service:
+                            if ([dict[@"Symbol"] isEqualToString:[s ticker]]) { // If the user's stock ticker matches the returned stock's ticker, save the stock's information.
+                                // Calculate and set the total value of this stock holding.
                                 [self getTotalValue:dict numShares:[portfolio.holdings[stockNum] numShares]];
                                 ++stockNum;
                                 [holdingsData addObject:dict];
+                                // Add its value to the total portfolio value.
                                 totalPortfolioValue = [totalPortfolioValue decimalNumberByAdding:dict[@"HoldingsValue"]];
                                 break;
                             }
@@ -109,7 +123,7 @@
                     }
                 }
             }
-            else
+            else // The data returned from the Web service was nil.
             {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Problem retrieving data" message:@"Please check your Internet connection or pull to refresh to try again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -117,23 +131,30 @@
                 });
             }
             
+            // Do UI updates on the main thread.
             dispatch_async(dispatch_get_main_queue(), ^{
+                // Reload the table's data.
                 [self.tableView reloadData];
+                // Close the pull-to-refresh control.
                 [self.refreshControl endRefreshing];
+                // Stop the activity indicator spinner.
                 [spinner stopAnimating];
             });
         });
     } else {
+        // We need to clear any old stock holdings data so the data in this table is in sync with the data on the Stock Status page.
         [holdingsData removeAllObjects];
         [self.tableView reloadData];
-        
+        // Close the pull-to-refresh control.
         [self.refreshControl endRefreshing];
+        // Stop the activity indicator spinner.
         [spinner stopAnimating];
     }
 }
 
 - (void)getTotalValue:(NSMutableDictionary *)dict numShares:(NSNumber *)numShares
 {
+    // Get the total value for this stock holding by multiplying the price by the number of shares.
     NSDecimalNumber * sharePrice = [NSDecimalNumber decimalNumberWithString:dict[@"LastTradePriceOnly"]];
     NSDecimalNumber * totalValue = [sharePrice decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[numShares stringValue]]];
     dict[@"HoldingsValue"] = totalValue;
@@ -142,10 +163,11 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if (holdingsData.count > 0) {
+        // If we have data, clear the message we displayed before.
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         self.tableView.backgroundView = nil;
     } else {
-        // Display a message when the table is empty
+        // Display a message when the table is empty.
         UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
         
         messageLabel.text = @"You haven't added any stock holdings. Go to Stock Status page to add holdings.";
@@ -164,9 +186,10 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     switch (section) {
-        case 0:
+        case PORTFOLIO_SECTION:
             return holdingsData.count;
-        case 1:
+        case TOTAL_SECTION:
+            // If there are any holdings, there will be a row for the total.
             return holdingsData.count > 0 ? 1 : 0;
         default:
             return 0;
@@ -176,9 +199,9 @@
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     switch (section) {
-        case 0:
+        case PORTFOLIO_SECTION:
             return @"Portfolio Contents";
-        case 1:
+        case TOTAL_SECTION:
             return @"Total";
         default:
             return @"Error";
@@ -192,12 +215,13 @@
     NSInteger row = indexPath.row;
     
     switch (section) {
-        case 0:
+        case PORTFOLIO_SECTION:
         {
             [cell.tickerLabel setText:holdingsData[row][@"Symbol"]];
 
             [cell.valueLabel setText:[NSString stringWithFormat:@"%.2f", [holdingsData[row][@"HoldingsValue"] doubleValue]]];
-    
+
+            // Use the correct "share/shares" depending on how many shares the user actually has.
             NSString * calcFormatString;
             if ([[portfolio.holdings[row] numShares] compare:[NSNumber numberWithInt:1]] == NSOrderedSame)
             {
@@ -211,7 +235,7 @@
             [cell.calculationLabel setText:[NSString stringWithFormat:calcFormatString, [portfolio.holdings[row] numShares], holdingsData[row][@"LastTradePriceOnly"]]];
             break;
         }
-        case 1:
+        case TOTAL_SECTION:
         {
             [cell.tickerLabel setText:@"Total"];
             [cell.valueLabel setText:[totalPortfolioValue stringValue]];
