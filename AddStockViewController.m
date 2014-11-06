@@ -76,6 +76,8 @@
 - (IBAction)addButton:(id)sender {
     // Change all input ticker symbols to upper case because the Web APIs we use expect upper-case ticker symbols.
     NSString *ticker = [self.tickerTextField.text uppercaseString];
+    // Trim whitespace from the string.
+    ticker = [ticker stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     if ([ticker length] == WATCHING_SWITCH)
     {
