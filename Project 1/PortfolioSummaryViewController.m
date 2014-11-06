@@ -238,7 +238,7 @@
         case TOTAL_SECTION:
         {
             [cell.tickerLabel setText:@"Total"];
-            [cell.valueLabel setText:[totalPortfolioValue stringValue]];
+            [cell.valueLabel setText:[NSString stringWithFormat:@"%.2f", [totalPortfolioValue doubleValue]]];
             [cell.calculationLabel setText:@""];
             break;
         }
