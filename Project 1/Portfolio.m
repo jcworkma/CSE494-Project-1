@@ -93,20 +93,30 @@ static Portfolio *thePortfolio = nil;
         NSString *queryString = [NSString stringWithFormat:@"%@%@", STOCK_LOOKUP_BASE_URL, ticker];
         NSURL *queryURL = [NSURL URLWithString:queryString];
         NSData *data = [NSData dataWithContentsOfURL:queryURL];
-        NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:Nil];
         
-        if (resultDict.count == 0)
+        if (data != nil)
         {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                callback(SYMBOL_NOT_FOUND);
-            });
+            NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:Nil];
+            
+            if (resultDict.count == 0)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    callback(SYMBOL_NOT_FOUND);
+                });
+            }
+            else
+            {
+                [self.holdings addObject:stock];
+                [self savePortfolio];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    callback(SUCCESS);
+                });
+            }
         }
         else
         {
-            [self.holdings addObject:stock];
-            [self savePortfolio];
             dispatch_async(dispatch_get_main_queue(), ^{
-                callback(SUCCESS);
+                callback(NO_DATA);
             });
         }
     });
@@ -128,20 +138,30 @@ static Portfolio *thePortfolio = nil;
         NSString *queryString = [NSString stringWithFormat:@"%@%@", STOCK_LOOKUP_BASE_URL, ticker];
         NSURL *queryURL = [NSURL URLWithString:queryString];
         NSData *data = [NSData dataWithContentsOfURL:queryURL];
-        NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:Nil];
         
-        if (resultDict.count == 0)
+        if (data != nil)
         {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                callback(SYMBOL_NOT_FOUND);
-            });
+            NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:Nil];
+            
+            if (resultDict.count == 0)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    callback(SYMBOL_NOT_FOUND);
+                });
+            }
+            else
+            {
+                [self.watching addObject:stock];
+                [self savePortfolio];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    callback(SUCCESS);
+                });
+            }
         }
         else
         {
-            [self.watching addObject:stock];
-            [self savePortfolio];
             dispatch_async(dispatch_get_main_queue(), ^{
-                callback(SUCCESS);
+                callback(NO_DATA);
             });
         }
     });

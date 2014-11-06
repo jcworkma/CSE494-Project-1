@@ -87,53 +87,64 @@
             NSURL * queryURL = [NSURL URLWithString:stocksToQuery];
             NSData * data = [NSData dataWithContentsOfURL:queryURL];
             
-            id results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"query"][@"results"][@"quote"];
-            
-            // Need to special-case this because the API returns a JSON object if there's only one result and a JSON array if there's more than one result.
-            
-            if ([results isKindOfClass:[NSDictionary class]])
+            if (data != nil)
             {
-                if (portfolio.holdings.count > 0 && [results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]])
+                id results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"query"][@"results"][@"quote"];
+                
+                // Need to special-case this because the API returns a JSON object if there's only one result and a JSON array if there's more than one result.
+                
+                if ([results isKindOfClass:[NSDictionary class]])
                 {
-                    [self getStatusImage:results];
-                    [self getPercentage:results];
-                    [holdingsData addObject:results];
+                    if (portfolio.holdings.count > 0 && [results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]])
+                    {
+                        [self getStatusImage:results];
+                        [self getPercentage:results];
+                        [holdingsData addObject:results];
+                    }
+                } else {
+                    for (Stock * s in portfolio.holdings)
+                    {
+                        for (NSMutableDictionary * dict in results) {
+                            if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
+                                [self getStatusImage:dict];
+                                [self getPercentage:dict];
+                                [holdingsData addObject:dict];
+                                break;
+                            }
+                        }
+                    }
                 }
-            } else {
-                for (Stock * s in portfolio.holdings)
+                
+                if ([results isKindOfClass:[NSDictionary class]])
                 {
-                    for (NSMutableDictionary * dict in results) {
-                        if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
-                            [self getStatusImage:dict];
-                            [self getPercentage:dict];
-                            [holdingsData addObject:dict];
-                            break;
+                    if (portfolio.watching.count > 0 && [results[@"Symbol"] isEqualToString:[portfolio.watching[0] ticker]])
+                    {
+                        [self getStatusImage:results];
+                        [self getPercentage:results];
+                        [watchingData addObject:results];
+                    }
+                } else {
+                    for (Stock * s in portfolio.watching) {
+                        for (NSMutableDictionary * dict in results) {
+                            if ([dict[@"Symbol"] isEqualToString:[s ticker]])
+                            {
+                                [self getStatusImage:dict];
+                                [self getPercentage:dict];
+                                [watchingData addObject:dict];
+                                break;
+                            }
                         }
                     }
                 }
             }
-            
-            if ([results isKindOfClass:[NSDictionary class]])
+            else
             {
-                if (portfolio.watching.count > 0 && [results[@"Symbol"] isEqualToString:[portfolio.watching[0] ticker]])
-                {
-                    [self getStatusImage:results];
-                    [self getPercentage:results];
-                    [watchingData addObject:results];
-                }
-            } else {
-                for (Stock * s in portfolio.watching) {
-                    for (NSMutableDictionary * dict in results) {
-                        if ([dict[@"Symbol"] isEqualToString:[s ticker]])
-                        {
-                            [self getStatusImage:dict];
-                            [self getPercentage:dict];
-                            [watchingData addObject:dict];
-                            break;
-                        }
-                    }
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Problem retrieving data" message:@"Please check your Internet connection or pull to refresh to try again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                });
             }
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
                 [self.refreshControl endRefreshing];

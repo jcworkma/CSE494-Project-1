@@ -99,6 +99,9 @@
             case SUCCESS:
                 [self displayAlert:@"Success!" withMessage:@"Your stock was successfully added."];
                 break;
+            case NO_DATA:
+                [self displayAlert:@"Problem retrieving data" withMessage:@"Please check your Internet connection and try again"];
+                break;
             default:
                 NSLog(@"Error! Invalid result code received.");
         }

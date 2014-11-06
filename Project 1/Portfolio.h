@@ -13,6 +13,7 @@
 #define ALREADY_HOLDING 1
 #define ALREADY_WATCHING 2
 #define SYMBOL_NOT_FOUND 3
+#define NO_DATA 4
 
 #define STOCK_LOOKUP_BASE_URL @"http://dev.markitondemand.com/Api/v2/Lookup/json?input="
 

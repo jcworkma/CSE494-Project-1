@@ -83,28 +83,38 @@
             NSURL * queryURL = [NSURL URLWithString:stocksToQuery];
             NSData * data = [NSData dataWithContentsOfURL:queryURL];
             
-            NSMutableDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"query"][@"results"][@"quote"];
-            
-            // Need to special-case this because the API returns a JSON object if there's only one result and a JSON array if there's more than one result.
-            if (portfolio.holdings.count == 1) {
-                if ([results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]]) {
-                    [self getTotalValue:results numShares:[portfolio.holdings[0] numShares]];
-                    [holdingsData addObject:results];
-                    totalPortfolioValue = [totalPortfolioValue decimalNumberByAdding:results[@"HoldingsValue"]];
-                }
-            } else {
-                int stockNum = 0;
-                for (Stock * s in portfolio.holdings) {
-                    for (NSMutableDictionary * dict in results) {
-                        if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
-                            [self getTotalValue:dict numShares:[portfolio.holdings[stockNum] numShares]];
-                            ++stockNum;
-                            [holdingsData addObject:dict];
-                            totalPortfolioValue = [totalPortfolioValue decimalNumberByAdding:dict[@"HoldingsValue"]];
-                            break;
+            if (data != nil)
+            {
+                NSMutableDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"query"][@"results"][@"quote"];
+                
+                // Need to special-case this because the API returns a JSON object if there's only one result and a JSON array if there's more than one result.
+                if (portfolio.holdings.count == 1) {
+                    if ([results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]]) {
+                        [self getTotalValue:results numShares:[portfolio.holdings[0] numShares]];
+                        [holdingsData addObject:results];
+                        totalPortfolioValue = [totalPortfolioValue decimalNumberByAdding:results[@"HoldingsValue"]];
+                    }
+                } else {
+                    int stockNum = 0;
+                    for (Stock * s in portfolio.holdings) {
+                        for (NSMutableDictionary * dict in results) {
+                            if ([dict[@"Symbol"] isEqualToString:[s ticker]]) {
+                                [self getTotalValue:dict numShares:[portfolio.holdings[stockNum] numShares]];
+                                ++stockNum;
+                                [holdingsData addObject:dict];
+                                totalPortfolioValue = [totalPortfolioValue decimalNumberByAdding:dict[@"HoldingsValue"]];
+                                break;
+                            }
                         }
                     }
                 }
+            }
+            else
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Problem retrieving data" message:@"Please check your Internet connection or pull to refresh to try again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                });
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
