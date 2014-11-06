@@ -88,7 +88,7 @@
         [spinner stopAnimating];
         switch(result) {
             case ALREADY_HOLDING:
-                [self displayAlert:@"Already holding" withMessage:@"You are already holding this stock. You can add more shares on the stock editing page."];
+                [self displayAlert:@"Already holding" withMessage:@"You are already holding this stock."];
                 break;
             case ALREADY_WATCHING:
                 [self displayAlert:@"Already watching" withMessage:@"You are already watching this stock."];
