@@ -193,17 +193,31 @@
     
     switch (section) {
         case 0:
+        {
             [cell.tickerLabel setText:holdingsData[row][@"Symbol"]];
 
             [cell.valueLabel setText:[NSString stringWithFormat:@"%.2f", [holdingsData[row][@"HoldingsValue"] doubleValue]]];
     
-            [cell.calculationLabel setText:[NSString stringWithFormat:@"%@ shares @ %@ per share", [portfolio.holdings[row] numShares], holdingsData[row][@"LastTradePriceOnly"]]];
+            NSString * calcFormatString;
+            if ([[portfolio.holdings[row] numShares] compare:[NSNumber numberWithInt:1]] == NSOrderedSame)
+            {
+                calcFormatString = @"%@ share @ %@ per share";
+            }
+            else
+            {
+                calcFormatString = @"%@ shares @ %@ per share";
+            }
+            
+            [cell.calculationLabel setText:[NSString stringWithFormat:calcFormatString, [portfolio.holdings[row] numShares], holdingsData[row][@"LastTradePriceOnly"]]];
             break;
+        }
         case 1:
+        {
             [cell.tickerLabel setText:@"Total"];
             [cell.valueLabel setText:[totalPortfolioValue stringValue]];
             [cell.calculationLabel setText:@""];
             break;
+        }
     }
     
     return cell;
