@@ -10,6 +10,8 @@
 #import "Portfolio.h"
 #import "Stock.h"
 
+#define WATCHING_SWITCH 0
+
 @interface AddStockViewController ()
 - (IBAction)categorySwitch:(id)sender;
 - (IBAction)addButton:(id)sender;
@@ -58,7 +60,7 @@
 
 - (IBAction)categorySwitch:(id)sender {
     // If the switch was set to "Watching", disable inteaction on the "Shares" text field.
-    if ([self.categorySegmentedControl selectedSegmentIndex] == 0)
+    if ([self.categorySegmentedControl selectedSegmentIndex] == WATCHING_SWITCH)
     {
         [self.sharesTextField setUserInteractionEnabled:NO];
     }
@@ -74,7 +76,7 @@
 - (IBAction)addButton:(id)sender {
     NSString *ticker = [self.tickerTextField.text uppercaseString];
     
-    if ([ticker length] == 0)
+    if ([ticker length] == WATCHING_SWITCH)
     {
         [self displayAlert:@"No ticker symbol" withMessage:@"Please enter a ticker symbol"];
         return;
@@ -107,7 +109,7 @@
         }
     };
     
-    if ([self.categorySegmentedControl selectedSegmentIndex] == 0) // The switch is set to "Watching"
+    if ([self.categorySegmentedControl selectedSegmentIndex] == WATCHING_SWITCH) // The switch is set to "Watching"
     {
         Stock *stock = [[Stock alloc] init:ticker withNumShares:0];
         // Start the activity indicator spinner.
