@@ -151,7 +151,11 @@
     NSDecimalNumber * change = [NSDecimalNumber decimalNumberWithString:dict[@"Change"]];
     NSDecimalNumber * lastPrice = [NSDecimalNumber decimalNumberWithString:dict[@"LastTradePriceOnly"]];
     NSDecimalNumber * previousPrice = [lastPrice decimalNumberBySubtracting:change];
-    NSDecimalNumber * percentChange = [change decimalNumberByDividingBy:previousPrice];
+    NSDecimalNumber * percentChange;
+    if (![previousPrice isEqualToNumber:[NSDecimalNumber zero]])
+        percentChange = [change decimalNumberByDividingBy:previousPrice];
+    else
+        percentChange = [NSDecimalNumber zero];
     percentChange = [percentChange decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:@"100"]];
     dict[@"Percent"] = percentChange;
 }
