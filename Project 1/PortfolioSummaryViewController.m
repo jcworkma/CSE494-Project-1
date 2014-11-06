@@ -97,7 +97,7 @@
                 // The actual content we want is nested inside the returned JSON object.
                 NSMutableDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"query"][@"results"][@"quote"];
                 
-                // This API returns a JSON object (not a JSON array) if there is only one result in the result set. It returns a JSON array of JSON objects if there is more than one result. Therefore, we have to check what data structure type the result is so we can properly extract the data we want.
+                // This API returns a JSON object (not a JSON array) if there is only one result in the result set. It returns a JSON array of JSON objects if there is more than one result. Therefore, we have to check how many results there should be so we can properly extract the data we want.
                 if (portfolio.holdings.count == 1) {
                     if ([results[@"Symbol"] isEqualToString:[portfolio.holdings[0] ticker]]) {
                         // Calculate and set the total value of this stock holding.
