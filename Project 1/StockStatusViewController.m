@@ -81,12 +81,10 @@
             [watchingData removeAllObjects];
             
             // Put all the stocks from watching and holding together.
-            NSMutableSet * stockSet = [[NSMutableSet alloc] init];
-            [stockSet addObjectsFromArray:portfolio.holdings];
-            [stockSet addObjectsFromArray:portfolio.watching];
-
+            NSMutableArray * stocksArray = [NSMutableArray arrayWithArray:portfolio.holdings];
+            [stocksArray addObjectsFromArray:portfolio.watching];
+            
             NSMutableString * stocksToQuery = [[NSMutableString alloc] initWithString:STOCK_DATA_QUERY_URL_P1];
-            NSArray * stocksArray = [stockSet allObjects];
             // Append the first stock ticker name to the URL, which needs to be done separately from the other stock tickers because they all have to be comma-separated in the URL.
             [stocksToQuery appendString:[NSString stringWithFormat:@"%@%@%@", QUOTATION_ENCODING, [stocksArray[0] ticker], QUOTATION_ENCODING]];
             // Append the rest of the stock ticker names to the URL.
