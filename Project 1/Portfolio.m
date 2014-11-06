@@ -109,7 +109,7 @@ static Portfolio *thePortfolio = nil;
             }
             else    // The array contains data, so the stock exists.
             {
-                // Add to the user's holdings and save them.
+                // Add the stock to the user's holdings and save them.
                 [self.holdings addObject:stock];
                 [self savePortfolio];
                 // We're not on the main thread and the callback does UI updates, so call the callback on the main thread.
@@ -159,7 +159,7 @@ static Portfolio *thePortfolio = nil;
             }
             else // The array contains data, so the stock exists.
             {
-                // Add to the user's watched stocks and save them.
+                // Add the stock to the user's watched stocks and save them.
                 [self.watching addObject:stock];
                 [self savePortfolio];
                 // We're not on the main thread and the callback does UI updates, so call the callback on the main thread.
