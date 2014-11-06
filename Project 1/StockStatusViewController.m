@@ -193,7 +193,7 @@
     NSDecimalNumber * lastPrice = [NSDecimalNumber decimalNumberWithString:dict[@"LastTradePriceOnly"]];
     NSDecimalNumber * previousPrice = [lastPrice decimalNumberBySubtracting:change];
     NSDecimalNumber * percentChange;
-    // Check for a divide-by-zero error if the stock's previous price was zero.
+    // Check for a divide-by-zero error.
     if (![previousPrice isEqualToNumber:[NSDecimalNumber zero]])
         percentChange = [change decimalNumberByDividingBy:previousPrice];
     else
