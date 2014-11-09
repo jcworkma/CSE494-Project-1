@@ -2,7 +2,7 @@
 //  StatusTableViewCell.m
 //  Project 1
 //
-//  Created by Christopher Schott on 11/1/14.
+//  Created by Joseph North on 11/1/14.
 //  Copyright (c) 2014 CSE494. All rights reserved.
 //
 
