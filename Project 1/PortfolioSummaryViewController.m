@@ -9,6 +9,7 @@
 #import "PortfolioSummaryViewController.h"
 #import "Portfolio.h"
 #import "PortfolioTableViewCell.h"
+#import "EditStockHoldingView.h"
 
 #define STOCK_DATA_QUERY_URL_P1 @"https://query.yahooapis.com/v1/public/yql?q=select%20Change%2C%20LastTradePriceOnly%2C%20Symbol%20from%20yahoo.finance.quote%20where%20symbol%20in%20("
 #define COMMA_ENCODING @"%2C"
@@ -20,6 +21,7 @@
 
 #define PORTFOLIO_SECTION 0
 #define TOTAL_SECTION 1
+#define SEGUE_TO_EDIT @"TO_EDIT_STOCK"
 
 @interface PortfolioSummaryViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -246,5 +248,42 @@
     
     return cell;
 }
+
+/* ADDED BY jack workman FOR CSE 494 ASSIGNMENT 5 TASK #1 */
+
+/* much thanks to http://www.appcoda.com/how-to-handle-row-selection-in-uitableview/ */
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // section 0 contains stocks, section 1 contains total
+    NSInteger section = indexPath.section;
+    if (section == 0)
+    {
+        NSInteger row = indexPath.row;
+        
+        // Useful debug UIAlertView
+        /*
+        Stock* stock = (Stock*)portfolio.holdings[row];
+        NSString* toDisplay = [NSString stringWithFormat: @"You've selected row #%ld = %@ with %@ shares", (long)row, (NSString*)[stock ticker], [stock numShares]];
+        UIAlertView *messageAlert = [[UIAlertView alloc] initWithTitle:@"Row Selected" message:toDisplay delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    
+        // Display Alert Message
+        [messageAlert show];
+         */
+         
+        NSNumber* sender = [NSNumber numberWithInteger:row];
+        [self performSegueWithIdentifier:SEGUE_TO_EDIT sender:sender];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // segue for clicking on table view cell
+    if([segue.identifier isEqualToString:SEGUE_TO_EDIT]) {
+        NSNumber* row = (NSNumber*)sender;
+        EditStockHoldingView* view = [segue destinationViewController];
+        view.IndexOfSelectedStock = [row integerValue];
+    }
+}
+
+/* END CONTRIBUTIONS BY jack workman */
 
 @end

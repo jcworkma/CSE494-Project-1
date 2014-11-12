@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		109700911A13C1230038F447 /* EditStockHoldingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 109700901A13C1230038F447 /* EditStockHoldingView.m */; };
 		664CACE81A0198E100D6B4FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CACE71A0198E100D6B4FF /* main.m */; };
 		664CACEB1A0198E100D6B4FF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CACEA1A0198E100D6B4FF /* AppDelegate.m */; };
 		664CACEE1A0198E100D6B4FF /* StockStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664CACED1A0198E100D6B4FF /* StockStatusViewController.m */; };
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1097008F1A13C1230038F447 /* EditStockHoldingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditStockHoldingView.h; sourceTree = "<group>"; };
+		109700901A13C1230038F447 /* EditStockHoldingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditStockHoldingView.m; sourceTree = "<group>"; };
 		664CACE21A0198E100D6B4FF /* Project 1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Project 1.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		664CACE61A0198E100D6B4FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		664CACE71A0198E100D6B4FF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -113,6 +116,8 @@
 				664CACED1A0198E100D6B4FF /* StockStatusViewController.m */,
 				664CACEF1A0198E100D6B4FF /* PortfolioSummaryViewController.h */,
 				664CACF01A0198E100D6B4FF /* PortfolioSummaryViewController.m */,
+				109700901A13C1230038F447 /* EditStockHoldingView.m */,
+				1097008F1A13C1230038F447 /* EditStockHoldingView.h */,
 				9D55F7A21A05810900B630CC /* StatusTableViewCell.h */,
 				9D55F7A31A05810900B630CC /* StatusTableViewCell.m */,
 				669144F11A099C930006A4FA /* PortfolioTableViewCell.h */,
@@ -270,6 +275,7 @@
 				664CAD101A01A61200D6B4FF /* Portfolio.m in Sources */,
 				664CACE81A0198E100D6B4FF /* main.m in Sources */,
 				9D55F7A41A05810900B630CC /* StatusTableViewCell.m in Sources */,
+				109700911A13C1230038F447 /* EditStockHoldingView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
